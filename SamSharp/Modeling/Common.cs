@@ -1,0 +1,90 @@
+﻿using TorchSharp;
+using TorchSharp.Modules;
+using static TorchSharp.torch;
+using static TorchSharp.torch.nn;
+
+namespace Sam2Sharp.Modeling
+{
+	public class Common
+	{
+		public abstract class ImageEncoderViTBase : Module<Tensor, Tensor>
+		{
+			public readonly int img_size;
+			public ImageEncoderViTBase(int img_size) : base(nameof(ImageEncoderViTBase))
+			{
+				this.img_size = img_size;
+			}
+		}
+
+		public class MLPBlock : Module<Tensor, Tensor>
+		{
+			public enum ActivationType
+			{
+				GELU,
+				ReLU,
+				SiLU,
+			}
+
+			private readonly ModuleList<Linear> layers;
+			//private readonly Linear lin2;
+			public readonly Module<Tensor, Tensor> act;
+
+			public MLPBlock(int embedding_dim, int mlp_dim, ActivationType activationType = ActivationType.GELU) : base(nameof(MLPBlock))
+			{
+				this.layers = new ModuleList<Linear>();
+                this.layers.Add(nn.Linear(embedding_dim, mlp_dim));
+                this.layers.Add(nn.Linear(mlp_dim, embedding_dim));
+				this.act = activationType switch
+				{
+					ActivationType.GELU => GELU(),
+					ActivationType.ReLU => ReLU(),
+					ActivationType.SiLU => SiLU(),
+					_ => throw new ArgumentException("Unsupported activation type", nameof(activationType)),
+				};
+				RegisterComponents();
+			}
+
+			public override Tensor forward(Tensor x)
+			{
+				using var _ = NewDisposeScope();
+				return this.layers[1].forward(this.act.forward(this.layers[0].forward(x))).MoveToOuterDisposeScope();
+			}
+		}
+
+		public class LayerNorm2d : Module<Tensor, Tensor>
+		{
+			private readonly Parameter weight;
+			private readonly Parameter bias;
+			private readonly float eps;
+
+			public LayerNorm2d(int num_channels, float eps = 1e-6f) : base(nameof(LayerNorm2d))
+			{
+				this.weight = nn.Parameter(torch.ones(num_channels));
+				this.bias = nn.Parameter(torch.zeros(num_channels));
+				this.eps = eps;
+				RegisterComponents();
+			}
+
+			public override Tensor forward(Tensor x)
+			{
+				using var _ = NewDisposeScope();
+				Tensor u = x.mean(new long[] { 1 }, keepdim: true);
+				Tensor s = (x - u).pow(2).mean(new long[] { 1 }, keepdim: true);
+				x = (x - u) / torch.sqrt(s + this.eps);
+				x = this.weight[.., TensorIndex.Null, TensorIndex.Null] * x + this.bias[.., TensorIndex.Null, TensorIndex.Null];
+				return x.MoveToOuterDisposeScope();
+			}
+
+		}
+
+		internal static (Device, ScalarType) GetDeviceAndScaleType(Module module)
+		{
+			var named_parameters = module.named_parameters();
+			if (named_parameters.Count() < 1)
+			{
+				throw new ArgumentNullException($"{module.GetName()} is not Init.");
+			}
+			return (named_parameters.ToArray()[0].parameter.device, named_parameters.ToArray()[0].parameter.dtype);
+		}
+	}
+}
