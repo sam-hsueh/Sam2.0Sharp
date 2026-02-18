@@ -1,5 +1,4 @@
-﻿using NumSharp;
-using OpenCvSharp;
+﻿using OpenCvSharp;
 using System.Collections;
 using System.Drawing;
 using System.Drawing.Drawing2D;
