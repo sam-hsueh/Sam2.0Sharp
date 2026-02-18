@@ -13,4 +13,9 @@
 
 下载https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_Small.pt
 
+<img width="1103" height="667" alt="屏幕截图 2026-02-16 180822" src="https://github.com/user-attachments/assets/75cc6aba-11f0-44f0-8f59-0983081b4d18" />
+
+
 移动KEY POINT 分割不同区域
+
+<img width="1091" height="671" alt="屏幕截图 2026-02-16 180758" src="https://github.com/user-attachments/assets/d2494170-edd0-483d-9c48-49956bc7dcfb" />
