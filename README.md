@@ -1,16 +1,22 @@
-这是使用豆包将Sam2(https://codeload.github.com/facebookresearch/sam2)从Python转换为C#的版本，保留原代码结构及命名；
 
-引用TorchSharp.dll、TorchVision.dll文件从DLL目录;
+This is a version where Sam2 (https://codeload.github.com/facebookresearch/sam2) is converted from Python to C# using Doubao, retaining the original code structure and naming.
 
-拷贝LibTorshSharp.dll至运行目录Runtimes//win-x64/native目录从DLL目录
+Reference the TorchSharp.dll and TorchVision.dll files from the DLL directory.
 
-本程序需CUDA13.0、PyTorch2.10.0支持，需要下载LibTorch从以下网站： https://download.pytorch.org/libtorch/cu130/libtorch-win-shared-with-deps-2.10.0%2Bcu130.zip
-解压后，将Lib目录下DLL文件全部拷贝至运行目录Runtimes//win-x64/native目录；
+Copy LibTorshSharp.dll from the DLL directory to the runtime directory Runtimes//win-x64/native
 
-下载https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_tiny.pt
+This program requires the support of CUDA 13.0 and PyTorch 2.10.0. You need to download LibTorch from the following website: https://download.pytorch.org/libtorch/cu130/libtorch-win-shared-with-deps-2.10.0%2Bcu130.zip
+After unzipping, copy all DLL files in the Lib directory to the runtime directory Runtimes//win-x64/native.
 
-下载https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2.1_hiera_tiny.pt
+Download https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_tiny.pt
 
-下载https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_Small.pt
+Download https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2.1_hiera_tiny.pt
 
-移动KEY POINT 分割不同区域
+Download https://dl.fbaipublicfiles.com/segment_anything_2/072824/sam2_hiera_Small.pt
+
+<img width="1103" height="667" alt="屏幕截图 2026-02-16 180822" src="https://github.com/user-attachments/assets/664fbbb0-4d62-4071-b5f1-19a6313bd906" />
+
+Move KEY POINTS Segmentate different rigens.
+
+<img width="1091" height="671" alt="屏幕截图 2026-02-16 180758" src="https://github.com/user-attachments/assets/035f05af-9fb5-41c9-82a6-b6b76c3e977b" />
+...
